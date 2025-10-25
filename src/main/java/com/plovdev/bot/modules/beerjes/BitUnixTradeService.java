@@ -165,34 +165,6 @@ public class BitUnixTradeService implements TradeService {
             logger.warn("Error to initialize 'BitUnixWS'");
         }
 
-        if (types.contains("market")) {
-            Utils.sleep(1000);
-            List<Position> positions = getPositions(user).stream().filter(p -> {
-                System.out.println("Pos symbol: " + p.getSymbol() + ", our symbol: " + symbol);
-                return p.getSymbol().equalsIgnoreCase(symbol);
-            }).toList();
-
-            if (!positions.isEmpty()) {
-                Position position = positions.getFirst();
-                String posId = position.getPosId();
-
-                Utils.sleep(500);
-                OrderResult stopLossResult = placeStopLoss(user, position, signal.getStopLoss(), symbolInfo, oec);
-                custom.info("Setuped sl: {}", stopLossResult.id());
-
-                Utils.sleep(500);
-                setupTP(signal, user, totalSize, new BigDecimal(signal.getStopLoss()), posId, totalSize, symbolInfo, ws, oec);
-                custom.info("Setuped tp");
-
-                oec.setPositioned(true);
-            } else {
-                logger.warn("Position for place takes and stop not found. User: {}", user.getTgName());
-            }
-            return null;
-        } else {
-            logger.info("Signal for {}, {} haven't merket orders. User: {}", symbol, direction, user.getTgName());
-        }
-
         if (ws != null) {
             logger.info("Starting position monitor...");
             startPositionMonitor(user, symbol, signal, totalSize, ws, totalSize, symbolInfo, oec);
@@ -855,55 +827,34 @@ public class BitUnixTradeService implements TradeService {
         return orders;
     }
 
-    public void setupTP(Signal signal, UserEntity user, BigDecimal positionSize, BigDecimal stopLoss, String posId, BigDecimal margin, SymbolInfo symbolInfo, BitUnixWS ws, OrderExecutionContext context) {
+    public void setupTP(Signal signal, UserEntity user, BigDecimal positionSize, String posId, SymbolInfo symbolInfo, BitUnixWS ws, OrderExecutionContext context) {
         StopInProfitTrigger trigger = context.getTrigger();
         try {
-            logger.info("Setuping takes: {}", signal);
             BitUnixStopLossTrailer trailer = new BitUnixStopLossTrailer(this, trigger);
             BitUnixTakesSetuper setuper = new BitUnixTakesSetuper(trigger, this, trailer);
 
-            printPart("setuping take profits");
             List<TakeProfitLevel> tpLevels = BeerjUtils.adjustTakeProfits(signal, positionSize, settingsService.getTPRationsByGroup(user.getGroup()), getEntryPrice(signal.getSymbol()), symbolInfo);
             if (tpLevels.size() - 1 <= trigger.getTakeToTrailNumber()) {
                 trigger.setTakeToTrailNumber(Math.max(tpLevels.size() - 2, 0));
             }
 
-            // 7. Выставляем тейки
             List<Map<String, String>> orders = new ArrayList<>();
             for (TakeProfitLevel level : tpLevels) {
-                try {
-                    Map<String, String> payload = new HashMap<>();
-                    payload.put("qty", level.getSize().toPlainString());
-                    payload.put("price", level.getPrice().toPlainString());
-                    payload.put("side", signal.getDirection().equalsIgnoreCase("long") ? "BUY" : "SELL");
-                    payload.put("tradeSide", "CLOSE");
-                    payload.put("positionId", posId);
-                    payload.put("orderType", "LIMIT");
-                    payload.put("effect", "GTC");
-                    payload.put("reduceOnly", "true");
-
-
-                    payload.put("tpPrice", level.getPrice().toPlainString()); // Цена активации
-                    payload.put("tpOrderPrice", level.getPrice().toPlainString()); // Цена исполнения
-                    payload.put("tpOrderType", "MARKET");
-                    payload.put("tpStopType", "MARK_PRICE");
-
-                    System.out.println("\n\n");
-                    custom.blue("Payload:");
-                    custom.warn(objectMapper.writeValueAsString(payload));
-                    System.out.println("\n\n");
-
-                    orders.add(payload);
-                } catch (Exception e) {
-                    logger.warn("Failed to place TP at {}: {}", level.getPrice(), e.getMessage());
-                }
+                Map<String, String> payload = new HashMap<>();
+                payload.put("qty", level.getSize().toPlainString());
+                payload.put("price", level.getPrice().toPlainString());
+                payload.put("side", signal.getDirection().equalsIgnoreCase("long") ? "BUY" : "SELL");
+                payload.put("tradeSide", "CLOSE");
+                payload.put("positionId", posId);
+                payload.put("orderType", "LIMIT");
+                payload.put("effect", "GTC");
+                payload.put("reduceOnly", "true");
+                orders.add(payload);
             }
-            List<OrderResult> results = placeOrders(user, signal.getSymbol(), orders);
-            setuper.manageTakesInMonitor(ws, signal.getSymbol(), user, results, context.getStopLossId(), tpLevels, symbolInfo, signal.getDirection());
+            setuper.manageTakesInMonitor(ws, signal.getSymbol(), user, orders, tpLevels, symbolInfo, signal.getDirection(), context);
         } catch (Exception e) {
             logger.error("Critical error in setupTP for user {}: {}", user.getTgId(), e.getMessage(), e);
         }
-        printPart("take-profits placed");
     }
 
     private List<OrderResult> placeOrders(UserEntity user, String pair, List<Map<String, String>> orders) {
@@ -1181,15 +1132,9 @@ public class BitUnixTradeService implements TradeService {
             ws.setSymbol(symbol);
             try {
                 ws.addPositionListener(symbol, position -> {
-                    if (!context.isPositioned()) {
-                        custom.info("Position monitor worked.");
+                    if (!context.getAndSetPositioned(true)) { // Гарантирует выполнение только один раз
                         placeStopLoss(user, position, signal.getStopLoss(), info, context);
-                        ws.setStopId(position.getPosId());
-                        custom.info("Setuped sl: {}", context.getStopLossId());
-
-                        setupTP(signal, user, size, new BigDecimal(signal.getStopLoss()), position.getPosId(), margin, info, ws, context);
-                        custom.info("Setuped tp");
-                        context.setPositioned(true);
+                        setupTP(signal, user, position.getTotal(), position.getPosId(), info, ws, context);
                     }
                 });
                 ws.addTpslListener(symbol, order -> ws.close());
@@ -1289,5 +1234,29 @@ public class BitUnixTradeService implements TradeService {
             logger.error("Margin-mode change error: ", e);
         }
         printPart("margin mode changed");
+    }
+
+    @Override
+    public void cancelStopLoss(UserEntity user, String stopLossId, String symbol) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("symbol", symbol);
+            data.put("positionId", stopLossId); // У BitUnix stop loss привязан к ID позиции
+
+            String payload = objectMapper.writeValueAsString(data);
+            logger.info("Payload to cancel stop loss formed: {}", payload);
+
+            String response = postToBitUnix("/api/v1/futures/tpsl/position/cancel_order", user, payload);
+            custom.warn("RESPONSE: {}", response);
+
+            JsonNode root = objectMapper.readTree(response);
+            if (!validateJsonResopnse(response)) {
+                logger.warn("Stop loss not canceled");
+            } else {
+                logger.info("Stop loss canceled successfully");
+            }
+        } catch (Exception e) {
+            logger.error("Failed to cancel stop loss for symbol {}: {}", symbol, e.getMessage());
+        }
     }
 }

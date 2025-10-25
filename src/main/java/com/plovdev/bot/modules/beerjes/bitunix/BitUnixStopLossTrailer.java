@@ -30,19 +30,20 @@ public class BitUnixStopLossTrailer {
 
     public OrderResult trailStopByFirstTakeHit(UserEntity user, String symbol, String side, String oId, int pricePlace) {
         log.info("--------------------------------TRALING STOP IN PROFIT----------------------------------");
-        String group = user.getGroup();
         BigDecimal ret = trigger.getStopInProfitPercent();
 
-        log.info("Settings getted: group: {}, ret: {}, profit varint: 'take'}", group, ret);
+        log.info("Take percent: {}", ret);
 
-        log.info("Variant is 'take'");
-        log.info("Fisrt take percent: {}", ret);
+        Position position = service.getPositions(user).stream()
+                .filter(p -> p.getSymbol().equals(symbol))
+                .findFirst()
+                .orElse(null);
 
-        List<Position> positions = service.getPositions(user).stream().filter(p -> p.getSymbol().equals(symbol)).toList();
-        if (!positions.isEmpty()) {
-            return checkByTakeProfit(user, side, oId, positions.getFirst().getEntryPrice(), ret, symbol, pricePlace);
+        if (position != null) {
+            return checkByTakeProfit(user, side, oId, position.getEntryPrice(), ret, symbol, pricePlace);
         } else {
-            return OrderResult.error("No have position", null, symbol);
+            log.warn("No position found for symbol {} to trail stop loss.", symbol);
+            return OrderResult.no();
         }
     }
 
