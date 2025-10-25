@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Pachet de limbă: română (Moldova) -->
+<bot>
+    <start>🌍 Выберите язык / Alegeți limba / Choose language
+
+
+        🇷🇺 Русский
+        > Пожалуйста, выберите язык, на котором вы будете ознакомлены с правилами и соглашением.
+        Выберите ниже свой предпочтительный язык для ознакомления.
+
+
+        🇲🇩 Moldovenește
+        > Vă rugăm să selectați limba în care doriți să citiți regulile și acordul.
+        Alegeți mai jos limba preferată pentru a continua.
+
+
+        🇬🇧 English
+        > Please select the language in which you would like to view the rules and agreement.
+        Choose your preferred language below to proceed.
+
+
+        /help — Получить помощь по доступным командам.
+        Если у вас возникли трудности, введите эту команду.
+
+        /help — Get help with available commands.
+        If you experience any issues, type this command.
+
+
+        /help — Obțineți asistență privind comenzile disponibile.
+        Dacă întâmpinați dificultăți, introduceți această comandă.
+    </start>
+    <license>
+        🤖 Bine ați venit la Botul de Tranzacționare!
+
+        ⚠️ AVERTISMENT: Tranzacționarea automată pe piețele de criptomonede implică riscuri ridicate. Există
+        posibilitatea unei pierderi totale a depozitului.
+
+        📌 Utilizând acest bot, dumneavoastră:
+        - Înțelegeți complet riscurile tranzacționării pe piețele futures;
+        - Confirmați că sunteți în totalitate responsabil pentru acțiunile și pierderile suferite;
+        - Sunteți de acord că proprietarul botului nu este responsabil pentru pierderile financiare.
+
+        📣 CUM SĂ CREAȚI CHEI API PE BITGET \ BITUNIX
+        🔐 *Protejați-vă contul. Introduceți datele pas cu pas.*
+
+        ---
+
+        1️⃣ Accesați Managementul API
+        👉 Bitget\BitUnix → Profil → Management API → [+ Creează API]
+
+        ---
+
+        2️⃣ Configurați accesul
+        - Nume: TradingBot
+        - ✅ Tranzacționare (Trade)
+        - ✅ Citire (Read)
+        - ❌ Retragere fonduri (Withdraw) — DEZACTIVAȚI!
+        - ❌ Management API — DEZACTIVAȚI!
+
+        > 🔐 Securitate: Funcția de retragere trebuie să fie dezactivată.
+
+        ---
+
+        3️⃣ Copiați cele trei valori
+        Imediat după creare, copiați:
+
+        Cheia API (cheie publică)
+        Cheia Secretă (cheie privată)
+        Fraza de acces (Passphrase) – doar pentru Bitget
+
+        ⚠️ Aceasta este singura oară când veți vedea aceste date!
+
+        ---
+
+        4️⃣ Introduceți-le în bot, pe rând
+        Botul va cere fiecare element separat:
+
+        1. Introduceți cheia publică (API Key):
+        → Lipiți doar API Key
+
+        2. Introduceți cheia secretă (Secret Key):
+        → Lipiți doar Secret Key
+
+        3. Introduceți fraza de acces (Passphrase):
+        → Lipiți doar Passphrase (doar pentru Bitget)
+
+        📩 Răspundeți fiecărui mesaj al botului separat.
+
+        ---
+
+        🔒 Datele dumneavoastră sunt în siguranță
+
+        - Toate cheile sunt criptate (AES-256) imediat după introducere.
+        - Administratorii nu pot vedea cheile dumneavoastră în format deschis.
+        - În baza de date sunt stocate doar informațiile criptate.
+
+        Exemplu:
+        ÎNAINTE de criptare: x1y2z3...
+        DUPĂ criptare: a9b8c7d6...
+
+        ---
+
+        🛡 Sfaturi
+        - 🔁 Schimbați cheile la fiecare 3 luni.
+        - 🚫 Nu dați cheile nimănui.
+        - 🔄 Dacă ați pierdut accesul, ștergeți vechiul API și creați unul nou.
+
+        📣 Important! Înainte de a începe
+
+        Pentru a vă conecta la bot, trebuie să:
+
+        1. ✅ Vă înregistrați prin linkul meu de afiliat pe una dintre platforme:
+        Bitget 👉 https://partner.bitget.com/bg/W58MTR
+        BitUnix 👉 https://www.bitunix.com/register?vipCode=zwdn
+
+        2. 🔐 Introduceți codul de partener:
+        3zkl (Bitget)
+        zwdn (BitUnix)
+        (dacă nu este aplicat automat, introduceți-l manual)
+
+        3. 🧾 Finalizați verificarea contului (KYC) – obligatoriu doar pentru Bitget. Pentru BitUnix nu este necesar.
+
+        4. 💵 Depuneți primul depozit
+
+        🔹 Botul va verifica:
+        UID + codul de recomandare + activitatea contului
+
+        ❌ Dacă nu îndepliniți toate condițiile, accesul va fi refuzat.
+
+        ✅ Dacă sunteți de acord, apăsați butonul de mai jos.
+    </license>
+
+    <beerj-select>Alegeți bursa unde veți tranzacționa</beerj-select>
+
+    <help>
+        /start — Reporniți botul
+        /help — Obțineți lista tuturor comenzilor
+
+        Alegeți o acțiune apăsând butonul de pe tastatură.
+    </help>
+
+    <currentPositions>
+        Poziții curente:
+
+
+        %2s
+
+        Total: %2d din %2s permise.
+    </currentPositions>
+
+    <closePositions>
+        📒 Istoric tranzacții:
+
+        %2s
+    </closePositions>
+
+    <accept>Acceptă</accept>
+    <reject>Respinge</reject>
+
+
+    <referrDone>
+        🎉 Felicitări!
+        Ați îndeplinit toate condițiile programului de afiliați:
+
+        - Invitați: 10 persoane
+        - Toți au deschis peste 50 de poziții
+
+        Acum puteți solicita o recompensă de 100 USDT.
+        Apăsați butonul de mai jos pentru a trimite o cerere administratorului.
+    </referrDone>
+
+    <pendReferr>Solicitați recompensa</pendReferr>
+
+
+    <referrAccept>
+        ✅ Administratorul a confirmat îndeplinirea tuturor condițiilor.
+        Recompensa dvs. de 100 USDT va fi trimisă pe contul dvs. de bursă prin UID-ul dvs. ({UID}).
+        Aceasta este singura modalitate de a primi recompensa.
+        Așteptați acreditarea în termen de 24 de ore.
+
+        ⚠️ Contorul de afiliați a fost resetat. Începe un nou ciclu.
+    </referrAccept>
+
+
+    <referrReject>
+        ❌ Din păcate, nu ați îndeplinit toate condițiile programului de afiliați.
+        Verificați activitatea utilizatorilor invitați și încercați din nou.
+    </referrReject>
+
+
+    <lcsacc>
+        <![CDATA[ 📝 Pentru a începe înregistrarea, introduceți <b>UID-ul</b> de la bursă.
+        🔹 UID este identificatorul unic de utilizator pe bursă.
+
+        📌 Îl puteți găsi în profil: Profil → Setări → Generale → UID. ]]>
+    </lcsacc>
+
+
+    <lcsrej>
+        Pentru a utiliza botul, trebuie să acceptați în totalitate termenii acordului de licență.
+
+        Pentru a continua, faceți clic pe ➡️ /start
+    </lcsrej>
+    <cancel>Anulat</cancel>
+    <validUid>
+        ✅ Mulțumim! UID-ul dvs. a fost trimis administratorului pentru verificare.
+        Așteptați confirmarea.
+    </validUid>
+
+    <notValidUid>❌ Eroare: UID-ul trebuie să fie un număr. Încercați din nou.</notValidUid>
+
+
+    <referal>
+        🎁 Program de afiliați
+
+        🔗 Linkul dvs. de afiliat: https://t.me/traderb800bot?start={...}
+
+        💰 Condiții pentru recompensă:
+        - Invitați 10 afiliați
+        - Fiecare afiliat trebuie să deschidă peste 50 de poziții
+
+        🎁 Recompensă: 100 USDT (10 × 10 USDT)
+
+        După îndeplinirea condițiilor, ve ți primi o notificare și veți putea solicita recompensa.
+    </referal>
+
+
+    <regOk>
+        ✅ Administratorul a aprobat cererea dvs.!
+        🔑 Acum introduceți cheile API de la %2s:
+
+        1. Deschideți %2s → Profil → Management API → Creează API.
+        2. Activați: Tranzacționare, Citire, dar NU activați Retragere.
+        3. Copiați:
+        - Cheia Publică (API Key)
+        - Cheia Secretă (Secret Key)
+        %2s
+        __________________________________________
+
+        📩 Trimiteți API_KEY către bot
+    </regOk>
+    <codePhrase> - Parola (Passphrase)</codePhrase>
+    <getPassPhrase>Introduceți parola:</getPassPhrase>
+    <getSecretKey>Introduceți SECRET_KEY:</getSecretKey>
+    <getApiKey>Introduceți API_KEY:</getApiKey>
+    <regErr>
+        ❌ Administratorul a respins cererea dvs.!
+        Verificați corectitudinea datelor introduse și încercați din nou.
+
+        /start
+    </regErr>
+    <noPerms>❌ Nu puteți folosi această comandă!</noPerms>
+    <validErr>
+        ❌ Nu s-a putut conecta la bursă.
+        Verificați corectitudinea cheilor și încercați din nou. Introduceți
+
+        API_KEY-ul dvs.:
+    </validErr>
+
+    <validOk>
+        ✅ Cheile au fost confirmate!
+        Trecem la configurarea profilului.
+
+        Pasul 1: 🔧 Introduceți numele sau pseudonimul.:
+    </validOk>
+
+
+    <getPositions>
+        <![CDATA[ Pasul 2: 📊 Specificați numărul maxim de <b>poziții simultane</b> (ex: 4): ]]>
+    </getPositions>
+
+
+    <allPos>Deschide toate semnalele</allPos>
+    <acceptAllPos>Continuă</acceptAllPos>
+    <cancelAllPos>Anulează</cancelAllPos>
+
+
+    <onlyExpTraders>
+        ⚠️ ATENȚIE: Modul „Deschide toate semnalele” este activat.
+        Aceasta înseamnă că botul va încerca să deschidă o poziție pentru FIECARE semnal, ignorând limita.
+
+        🔹 Riscul: sarcină mare asupra depozitului.
+        🔹 Recomandat doar tranzacționarilor experimentați.
+        Sunteți sigur că doriți să activați acest mod?
+    </onlyExpTraders>
+
+
+    <onlyExpTradersNext>
+        - Limita de poziții este ignorată.
+        - Botul încearcă să deschidă o poziție pentru fiecare semnal.
+
+        > ❗ Important: această opțiune nu ocolește verificarea cheilor API sau accesul la bursă.
+    </onlyExpTradersNext>
+
+
+    <getPlecho><![CDATA[ Pasul 3: ⚙️ Specificați <b>leviera</b> dorită (ex: 20): ]]></getPlecho>
+    <getPosOrPlech>
+        <![CDATA[ 💰 Alegeți metoda de calcul a mărimii poziției:
+
+        1. Sumă fixă (în USDT)
+        2. Riscul în procente din depozit
+        <a href="https://telegra.ph/Kak-rasschityvaetsya-razmer-pozicii-08-16">mai multe despre reguli</a>
+
+        %2s
+         ]]>
+    </getPosOrPlech>
+    <selectSumOrProc>Alegeți: "sumă" sau "procent"</selectSumOrProc>
+    <getOnlySum>Introduceți suma fixă în USDT (minim 10 USDT):</getOnlySum>
+    <sum>Sumă</sum>
+    <proc>Procent</proc>
+
+
+    <getSum>Introduceți suma fixă în USDT (minim 10 USDT): - sumă</getSum>
+    <getProc>
+        Introduceți procentul din depozit pe care sunteți dispus să-l riscați pe o poziție (ex: 1): - procent
+    </getProc>
+    <regDone>🎉 Înregistrarea este finalizată! V-ați conectat cu succes la bot. 📌 Acum veți primi semnale și veți
+        deschide poziții automat. Pentru a vedea comenzile, introduceți: /help
+    </regDone>
+
+
+    <nonNumber>❌ Eroare: Ați introdus o valoare ne-numerică, vă rugăm să încercați din nou.</nonNumber>
+    <regFailed>🔔 Nu ați finalizat configurarea profilului. Introduceți informațiile lipsă.</regFailed>
+    <minSum>Valoare prea mică, introduceți una mai mare.</minSum>
+
+
+    <reply>
+        <profileButton>Profilul</profileButton>
+        <positionsButton>Poziții</positionsButton>
+        <historyButton>Istoricul tranzacțiilor</historyButton>
+        <referralButton>Codul meu de afiliat</referralButton>
+    </reply>
+
+    <profile>
+        ⚙️ Profilul meu:
+
+        Nume: %2s
+        UID: %2s
+        Număr de poziții: %2s
+        Levia: %2sx
+        Mărimea poziției: %2s
+        Bursa: %2s
+        Limbă: Română
+
+        Data expirării: %2s
+    </profile>
+    <positions>
+        <opens>Poziții deschise</opens>
+        <closes>Tranzacții încheiate</closes>
+    </positions>
+    <getOrdersInMessage>Afișează în mesaj</getOrdersInMessage>
+    <setProfile name="⚙️ Editează profilul" what="🔔 Alegeți ce doriți să modificați în profil:">
+        <setNameButton>🔹Nume</setNameButton>
+        <getNewName>🔧 Introduceți numele nou:</getNewName>
+        <setPosButton>📊 Număr de poziții</setPosButton>
+        <getNewPos>🔧 Introduceți numărul nou de poziții:</getNewPos>
+        <setPlechoButton>💪 Levia</setPlechoButton>
+        <getNewPlecho>🔧 Introduceți noua levia:</getNewPlecho>
+        <setLangButton>🇷🇴 Limbă</setLangButton>
+        <getNewLang>🔧 Alegeți noua limbă a interfeței:</getNewLang>
+        <setBeerjButton>Bursă</setBeerjButton>
+        <getNewBeerj>🔧 Alegeți bursa unde veți tranzacționa:</getNewBeerj>
+        <setKeysButton>Chei</setKeysButton>
+        <setPosSizeButton>📏 Mărimea poziției</setPosSizeButton>
+        <getNewExpr>🔧 Introduceți noua dată de expirare în formatul: aaaa.ll.zz Sau apăsați butonul „unlimit” pentru
+            acces nelimitat.
+        </getNewExpr>
+        <changed>✅ Modificările au fost aplicate cu succes</changed>
+        <cancel>❌ Anulare</cancel>
+    </setProfile>
+    <admmsg>Mesaj de la administratorie!</admmsg>
+</bot>
