@@ -90,4 +90,5 @@ public interface TradeService {
     List<Ticker> getAllTickers();
     OrderResult updateStopLoss(UserEntity user, String oId, String symbol, BigDecimal newStop);
     SymbolInfo getSymbolInfo(UserEntity user, String symbol) throws NetworkException;
+    void cancelStopLoss(UserEntity user, String stopLossId, String symbol);
 }

@@ -53,72 +53,61 @@ public class BitGetTakesSetuper {
         return orders;
     }
 
-    public void manageTakesInMonitor(BitGetWS ws, String symbol, UserEntity user, List<Map<String, String>> orders, String stopLossId, List<TakeProfitLevel> tpLevels, SymbolInfo info, BigDecimal positionSize, String direction) {
-        TypeValueSwitcher<Boolean> isOrdered = new TypeValueSwitcher<>(false);
-        List<OrderResult> ids = new ArrayList<>(service.placeOrders(user, symbol, orders).stream().filter(OrderResult::succes).toList());
-        System.out.println(ids);
+    public void manageTakesInMonitor(BitGetWS ws, String symbol, UserEntity user, List<Map<String, String>> orders, List<TakeProfitLevel> tpLevels, SymbolInfo info, String direction, OrderExecutionContext context) {
+        context.setCurrentTakeProfitIds(
+                service.placeOrders(user, symbol, orders).stream()
+                        .filter(OrderResult::succes)
+                        .toList()
+        );
 
-        TakeProfitLevel firstLlevel = tpLevels.getFirst();
         ws.addOrderListener(symbol, inputOrder -> {
-            String posSide = inputOrder.getPosSide();
             String tradeSide = inputOrder.getTradeSide();
             String orderId = inputOrder.getOrderId();
 
             if (tradeSide.equalsIgnoreCase("open")) {
-                Position position = service.getPositions(user).stream().filter(p -> p.getSymbol().equals(symbol) && p.getHoldSide().equalsIgnoreCase(direction)).toList().getFirst();
-                List<TakeProfitLevel> newTakes = BeerjUtils.reAdjustTakeProfits(position.getTotal(), tpLevels, info, service.getEntryPrice(symbol), direction);
-                List<Order> orderList = service.getOrders(user).stream().filter(o -> o.getSymbol().equals(symbol) && o.getTradeSide().equalsIgnoreCase("close")).toList();
+                List<String> tpIdsToCancel = context.getCurrentTakeProfitIds().stream().map(OrderResult::id).toList();
+                service.cancelLimits(user, symbol, tpIdsToCancel);
+                service.cancelStopLoss(user, context.getStopLossId(), symbol);
 
-                for (int i = 0; i < newTakes.size(); i++) {
-                    Order o = orderList.get(i);
-                    TakeProfitLevel level = newTakes.get(i);
-                    Map<String, String> payload = new HashMap<>();
-                    System.out.println(o.getOrderId());
-                    payload.put("orderId", o.getOrderId());
-                    payload.put("symbol", symbol);
-                    payload.put("productType", "USDT-FUTURES");
-                    payload.put("newSize", level.getSize().toPlainString());
-                    payload.put("newPrice", o.getPrice().toPlainString());
-                    payload.put("newClientOid", "BITGET#" + o.getOrderId());
+                Position updatedPosition = service.getPositions(user).stream()
+                        .filter(p -> p.getSymbol().equals(symbol) && p.getHoldSide().equalsIgnoreCase(direction))
+                        .findFirst().orElse(null);
 
-                    ids.set(i, service.modifyOrder(user, payload));
-                    tpLevels.set(i, level);
+                if (updatedPosition != null) {
+                    OrderResult newSlResult = service.placeStopLoss(user, updatedPosition, String.valueOf(inputOrder.getPresetStopLossPrice()), info, context);
+                    context.setStopLossId(newSlResult.id());
+
+                    List<TakeProfitLevel> newTakes = BeerjUtils.reAdjustTakeProfits(updatedPosition.getTotal(), tpLevels, info, updatedPosition.getEntryPrice(), direction);
+                    List<Map<String, String>> newTakesPayload = placeTakes(updatedPosition.getTotal(), newTakes, symbol, direction);
+                    context.setCurrentTakeProfitIds(
+                            service.placeOrders(user, symbol, newTakesPayload).stream()
+                                    .filter(OrderResult::succes)
+                                    .toList()
+                    );
                 }
             }
 
-            System.out.println(isOrdered.getT() + " - isOrdered");
-            if (!isOrdered.getT()) {
-                if (inputOrder.getState().equalsIgnoreCase("triggered")) {
-                    ws.close();
-                }
-
-                if (isTakeHit(inputOrder, tpLevels, ids)) {
+            if (isTakeHit(inputOrder, tpLevels, context.getCurrentTakeProfitIds())) {
+                context.incrementTakeProfitLevelsHit();
+                if (context.getTakeProfitLevelsHit() == 1) { // трейлинг только после первого тейка
                     try {
-                        logger.info("Fisrt take-profit(id: {}) is hit!", orderId);
-                        List<Order> ordersList = service.getOrders(user);
-                        List<Order> toCancel = new ArrayList<>();
+                        logger.info("First take-profit(id: {}) is hit!", orderId);
+                        service.getOrders(user).stream()
+                                .filter(o -> o.getSymbol().equals(symbol) && o.getTradeSide().equalsIgnoreCase("open"))
+                                .forEach(orderToCancel -> {
+                                    try {
+                                        service.closeOrder(user, orderToCancel);
+                                    } catch (Exception e) {
+                                        logger.error("Failed to cancel limit order: {}", orderToCancel.getOrderId(), e);
+                                    }
+                                });
 
-                        for (Order order : ordersList) {
-                            custom.blue("Order to cancel by first tp: symbol: {}, tradeSide: {}", order.getSymbol(), order.getTradeSide());
-                            if (order.getSymbol().equals(symbol) && order.getTradeSide().equalsIgnoreCase("open")) {
-                                custom.info("To cancel added a new order: {}", order);
-                                toCancel.add(order);
-                            }
-                        }
-                        custom.info("Order to cancel by first take: {}", toCancel);
-                        for (Order order : toCancel) {
-                            service.closeOrder(user, order);
-                        }
-                        //---------------------------------------LIMITS CANCELED------------------------------------------\\
                         if (trigger.isTakeVariant()) {
-                            System.out.println("STOP LOSS before trailing: " + stopLossId);
-                            OrderResult stopOrder = trailer.trailStopByFirstTakeHit(user, symbol, posSide, stopLossId, info.getPricePlace());
-                            ws.close();
-                            System.out.println("Stop order: " + stopOrder);
+                            OrderResult stopOrder = trailer.trailStopByFirstTakeHit(user, symbol, inputOrder.getPosSide(), context.getStopLossId(), info.getPricePlace());
+                            context.setStopLossId(stopOrder.id());
                         }
-                        isOrdered.setT(true);
                     } catch (Exception e) {
-                        logger.info("Fisrt TP hit error: ", e);
+                        logger.error("First TP hit error: ", e);
                     }
                 }
             }

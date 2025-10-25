@@ -151,20 +151,6 @@ public class BitGetTradeService implements TradeService {
         }
 
         BitGetWS ws = new BitGetWS(user, security, this);
-        if (types.contains("market")) {
-            List<Position> positions = getPositions(user).stream().filter(p -> p.getSymbol().equals(symbol)).toList();
-            if (!positions.isEmpty()) {
-                Position position = positions.getFirst();
-                placeStopLoss(user, position, signal.getStopLoss(), symbolInfo, oec);
-                ws.setStopId(oec.getStopLossId());
-                custom.info("Setuped sl: {}", oec.getStopLossId());
-
-                setupTP(signal, user, totalSize, new BigDecimal(signal.getStopLoss()), ws, totalSize, symbolInfo, oec);
-                custom.info("Setuped tp");
-
-                oec.setPositioned(true);
-            }
-        }
 
         long endTimeOpening = System.currentTimeMillis();
         long totalTimeMillis = endTimeOpening - startTimeOpening;
@@ -789,7 +775,7 @@ public class BitGetTradeService implements TradeService {
             tpLevels.forEach(l -> logger.info("Level: {}", l));
 
             System.out.println("Setuping tp... stop loss id: " + context.getStopLossId());
-            setuper.manageTakesInMonitor(ws, symbol, user, setuper.placeTakes(positionSize, tpLevels, symbol, direction), context.getStopLossId(), tpLevels, symbolInfo, positionSize, direction);
+            setuper.manageTakesInMonitor(ws, symbol, user, setuper.placeTakes(positionSize, tpLevels, symbol, direction), tpLevels, symbolInfo, direction, context);
         } catch (Exception e) {
             logger.error("Critical error in setupTP for user {}: {}", user.getTgId(), e.getMessage(), e);
         }
@@ -1152,6 +1138,33 @@ public class BitGetTradeService implements TradeService {
 
         } catch (Exception e) {
             logger.error("Margin mode changed success {}: {}", symbol, e.getMessage());
+        }
+    }
+
+    @Override
+    public void cancelStopLoss(UserEntity user, String stopLossId, String symbol) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("symbol", symbol);
+            data.put("productType", "usdt-futures");
+            data.put("marginCoin", "USDT");
+            data.put("planType", "pos_loss");
+            data.put("orderId", stopLossId);
+
+            String payload = objectMapper.writeValueAsString(data);
+            logger.info("Payload to cancel stop loss formed: {}", payload);
+
+            String response = postToBitGet("/api/v2/mix/order/cancel-tpsl-order", user, payload);
+            custom.warn("RESPONSE: {}", response);
+
+            JsonNode root = objectMapper.readTree(response);
+            if (!validateJsonResopnse(response)) {
+                logger.warn("Stop loss not canceled");
+            } else {
+                logger.info("Stop loss canceled successfully");
+            }
+        } catch (Exception e) {
+            logger.error("Failed to cancel stop loss for symbol {}: {}", symbol, e.getMessage());
         }
     }
 }

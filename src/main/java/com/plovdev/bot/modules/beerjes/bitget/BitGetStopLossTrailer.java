@@ -31,16 +31,21 @@ public class BitGetStopLossTrailer {
     public OrderResult trailStopByFirstTakeHit(UserEntity user, String symbol, String side, String oId, int pricePlace) {
         log.info("--------------------------------TRALING STOP IN PROFIT----------------------------------");
         log.info("Stop loss trailing to symbol: {}", symbol);
-        String group = user.getGroup();
         BigDecimal ret = trigger.getStopInProfitPercent();
 
-        log.info("Settings getted: group: {}, ret: {}, profit varint: 'take'", group, ret);
-
-        log.info("Variant is 'take'");
         log.info("Take percent: {}", ret);
 
-        List<Position> positions = service.getPositions(user).stream().filter(p -> p.getSymbol().equals(symbol)).toList();
-        return checkByTakeProfit(user, side, oId, positions.getFirst().getEntryPrice(), ret, symbol, pricePlace);
+        Position position = service.getPositions(user).stream()
+                .filter(p -> p.getSymbol().equals(symbol))
+                .findFirst()
+                .orElse(null);
+
+        if (position != null) {
+            return checkByTakeProfit(user, side, oId, position.getEntryPrice(), ret, symbol, pricePlace);
+        } else {
+            log.warn("No position found for symbol {} to trail stop loss.", symbol);
+            return OrderResult.no();
+        }
     }
 
     private OrderResult checkByTakeProfit(UserEntity user, String side, String oId, BigDecimal entry, BigDecimal offsetPercent, String symbol, int pricePlace) {
