@@ -165,36 +165,9 @@ public class BitUnixTradeService implements TradeService {
             logger.warn("Error to initialize 'BitUnixWS'");
         }
 
-        if (types.contains("market")) {
-            Utils.sleep(1000);
-            List<Position> positions = getPositions(user).stream().filter(p -> {
-                System.out.println("Pos symbol: " + p.getSymbol() + ", our symbol: " + symbol);
-                return p.getSymbol().equalsIgnoreCase(symbol);
-            }).toList();
-
-            if (!positions.isEmpty()) {
-                Position position = positions.getFirst();
-                String posId = position.getPosId();
-
-                Utils.sleep(500);
-                OrderResult stopLossResult = placeStopLoss(user, position, signal.getStopLoss(), symbolInfo, oec);
-                custom.info("Setuped sl: {}", stopLossResult.id());
-
-                Utils.sleep(500);
-                setupTP(signal, user, totalSize, new BigDecimal(signal.getStopLoss()), posId, totalSize, symbolInfo, ws, oec);
-                custom.info("Setuped tp");
-
-                oec.setPositioned(true);
-            } else {
-                logger.warn("Position for place takes and stop not found. User: {}", user.getTgName());
-            }
-            return null;
-        } else {
-            logger.info("Signal for {}, {} haven't merket orders. User: {}", symbol, direction, user.getTgName());
-        }
 
         if (ws != null) {
-            logger.info("Starting position monitor...");
+            logger.info("Starting position monitor for user {} and symbol {}", user.getTgName(), symbol);
             startPositionMonitor(user, symbol, signal, totalSize, ws, totalSize, symbolInfo, oec);
             ws.setStopId(oec.getStopLossId());
             logger.info("Position monitor started.");
@@ -1183,16 +1156,19 @@ public class BitUnixTradeService implements TradeService {
                 ws.addPositionListener(symbol, position -> {
                     if (!context.isPositioned()) {
                         custom.info("Position monitor worked.");
-                        placeStopLoss(user, position, signal.getStopLoss(), info, context);
+                        OrderResult stopLossResult = placeStopLoss(user, position, signal.getStopLoss(), info, context);
                         ws.setStopId(position.getPosId());
-                        custom.info("Setuped sl: {}", context.getStopLossId());
+                        custom.info("Setuped sl: {}", stopLossResult.id());
 
                         setupTP(signal, user, size, new BigDecimal(signal.getStopLoss()), position.getPosId(), margin, info, ws, context);
                         custom.info("Setuped tp");
                         context.setPositioned(true);
                     }
                 });
-                ws.addTpslListener(symbol, order -> ws.close());
+                ws.addTpslListener(symbol, order -> {
+                    logger.info("Closing websocket connection for user {} and symbol {}", user.getTgName(), symbol);
+                    ws.close();
+                });
             } catch (Exception e) {
                 logger.error("WebSocket ERROR: ", e);
             }
