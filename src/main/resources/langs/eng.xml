@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Language pack: English -->
+<bot>
+    <start>🌍 Выберите язык / Alegeți limba / Choose language
+
+
+        🇷🇺 Русский
+        > Пожалуйста, выберите язык, на котором вы будете ознакомлены с правилами и соглашением.
+        Выберите ниже свой предпочтительный язык для ознакомления.
+
+
+        🇲🇩 Moldovenește
+        > Vă rugăm să selectați limba în care doriți să citiți regulile și acordul.
+        Alegeți mai jos limba preferată pentru a continua.
+
+
+        🇬🇧 English
+        > Please select the language in which you would like to view the rules and agreement.
+        Choose your preferred language below to proceed.
+
+
+        /help — Получить помощь по доступным командам.
+        Если у вас возникли трудности, введите эту команду.
+
+        /help — Get help with available commands.
+        If you experience any issues, type this command.
+
+
+        /help — Obțineți asistență privind comenzile disponibile.
+        Dacă întâmpinați dificultăți, introduceți această comandă.
+    </start>
+    <license>
+        🤖 Welcome to the Trading Bot!
+
+        ⚠️ WARNING: Automated trading on cryptocurrency exchanges involves high risks. There is a possibility of
+        complete loss of your deposit.
+
+        📌 By using this bot, you:
+        - Fully understand the risks associated with futures trading;
+        - Confirm that you are solely responsible for your actions and any losses incurred;
+        - Agree that the bot owner is not liable for any financial losses.
+
+        📣 HOW TO CREATE API KEYS ON BITGET \ BITUNIX
+        🔐 *Secure your account. Enter keys step by step.*
+
+        ---
+
+        1️⃣ Go to API Management
+        👉 Bitget\BitUnix → Profile → API Management → [+ Create API]
+
+        ---
+
+        2️⃣ Configure Access
+        - Name: TradingBot
+        - ✅ Trade (enabled)
+        - ✅ Read (enabled)
+        - ❌ Withdrawal — DISABLED!
+        - ❌ API Management — DISABLED!
+
+        > 🔐 Security: Withdrawal permission must be disabled.
+
+        ---
+
+        3️⃣ Copy the three values
+        Immediately after creation, copy:
+
+        API Key (public key)
+        Secret Key (private key)
+        Passphrase (only required for Bitget exchange)
+
+        ⚠️ This is the only time you will see these credentials!
+
+        ---
+
+        4️⃣ Enter them into the bot one by one
+        The bot will ask for each item separately:
+
+        1. Enter your public key (API Key):
+        → Paste only the API Key
+
+        2. Enter your secret key (Secret Key):
+        → Paste only the Secret Key
+
+        3. Enter your passphrase:
+        → Paste only the Passphrase (required only for Bitget)
+
+        📩 Please reply to each message from the bot individually.
+
+        ---
+
+        🔒 Your keys are secure
+
+        - All keys are encrypted (AES-256) immediately upon entry.
+        - The administration cannot see your keys in plain text.
+        - Only encrypted data is stored in the database.
+
+        Example:
+        BEFORE encryption: x1y2z3...
+        AFTER encryption: a9b8c7d6...
+
+        ---
+
+        🛡 Tips
+        - 🔁 Change your API keys every 3 months.
+        - 🚫 Never share your keys with anyone.
+        - 🔄 If you lose access, delete the old API and create a new one.
+
+        📣 Important! Before Getting Started
+
+        To connect to the bot, you must:
+
+        1. ✅ Register via my referral link on one of the exchanges:
+        Bitget 👉 https://partner.bitget.com/bg/W58MTR
+        BitUnix 👉 https://www.bitunix.com/register?vipCode=zwdn
+
+        2. 🔐 Enter the partner code:
+        3zkl (Bitget)
+        zwdn (BitUnix)
+        (if not applied automatically, enter it manually)
+
+        3. 🧾 Complete account verification (KYC) — required only for Bitget. Not required for BitUnix.
+
+        4. 💵 Make your first deposit
+
+        🔹 The bot will verify:
+        UID + referral code + account activity
+
+        ❌ If any of the above steps are incomplete, access will be denied.
+
+        ✅ If you agree, click the button below.
+    </license>
+    <beerj-select>Select the exchange where you will trade</beerj-select>
+    <help>
+        /start — Restart the bot
+        /help — Get list of all commands
+
+        Choose an action by pressing the button on the keyboard.
+    </help>
+
+
+    <currentPositions>
+        Current positions:
+
+        %2s
+
+        Total: %2d out of %2s allowed.
+    </currentPositions>
+    <closePositions>
+        📒 Trade History:
+
+        %2s
+    </closePositions>
+
+
+    <accept>Accept</accept>
+    <reject>Reject</reject>
+
+
+    <referrDone>
+        🎉 Congratulations!
+        You have completed all conditions of the referral program: - Invited: 10 people - All opened more than 50
+        positions
+        Now you can request a reward of 100 USDT.
+        Press the button below to send a request to the administrator.
+    </referrDone>
+    <pendReferr>Request reward</pendReferr>
+
+
+    <referrAccept>
+        ✅ Administration has confirmed all conditions are met.
+        Your reward of 100 USDT will be sent to your exchange account via your UID ({UID}).
+
+        This is the only way to receive the reward. Expect the deposit within 24 hours.
+
+        ⚠️ Referral counter has been reset. A new cycle begins.
+    </referrAccept>
+
+
+    <referrReject>
+        ❌ Unfortunately, you have not met all conditions of the referral program.
+
+        Check the activity of your invited users and try again.
+    </referrReject>
+    <lcsacc>
+        <![CDATA[
+        📝 To begin registration, enter <b>UID</b> from the exchange.
+         🔹 UID is unique user identifier on the exchange.
+
+          📌 You can find it in your profile: Profile → Settings → General → UID.
+]]>
+    </lcsacc>
+    <lcsrej>
+        To use the bot, you must fully accept the terms of the license agreement.
+
+        To continue, click ➡️ /start
+    </lcsrej>
+    <cancel>Cancelled</cancel>
+    <validUid>
+        ✅ Thank you! Your UID has been sent to the administrator for verification.
+        Please wait for confirmation.
+    </validUid>
+    <notValidUid>❌ Error: UID must be a number. Please try again.</notValidUid>
+
+
+    <referal>
+        🎁 Referral Program
+
+        🔗 Your referral link: https://t.me/traderb800bot?start={...}
+
+        💰 Reward conditions:
+        - Invite 10 referrals
+        - Each referral must open 50+ positions
+
+        🎁 Reward: 100 USDT (10 × 10 USDT) After meeting the
+        conditions, you will receive a notification and can request your reward.
+    </referal>
+
+
+    <regOk>
+        ✅ Administrator has approved your request!
+        🔑 Now enter your API keys from %2s:
+
+        1. Open %2s → Profile → API Management → Create API.
+        2. Enable: Trade, Read, but DO NOT enable Withdraw.
+        3. Copy:
+        - Public Key (API Key)
+        - Secret Key (Secret Key)
+        %2s
+        __________________________________________
+
+        📩 Send the API_KEY to the bot
+    </regOk>
+    <codePhrase> - Passphrase (Passphrase)</codePhrase>
+    <getPassPhrase>Enter your passphrase:</getPassPhrase>
+    <getSecretKey>Enter SECRET_KEY:</getSecretKey>
+    <getApiKey>Enter API_KEY:</getApiKey>
+
+
+
+    <regErr>
+        ❌ Administrator has rejected your request! Check the correctness of your input and try again.
+
+        /start
+    </regErr>
+    <noPerms>❌ You cannot use this command!</noPerms>
+
+
+    <validErr>
+        ❌ Failed to connect to the exchange. Check the correctness of your keys and try again.
+
+        Enter API_KEY:
+    </validErr>
+    <validOk>
+        ✅ Keys confirmed! Proceeding to profile setup.
+
+        Step 1: 🔧 Enter name or nickname:
+    </validOk>
+
+
+
+    <getPositions>
+        <![CDATA[
+        Step 2: 📊 Specify the maximum number of <b>simultaneous positions</b> (e.g., 4): ]]></getPositions>
+    <allPos>Open all signals</allPos>
+    <acceptAllPos>Continue</acceptAllPos>
+    <cancelAllPos>Cancel</cancelAllPos>
+
+
+
+
+    <onlyExpTraders>
+        ⚠️ WARNING: "Open all signals" mode is enabled.
+
+        This means the bot will attempt to open a position
+        for EVERY signal, ignoring limits.
+        🔹 Risk: high load on deposit.
+        🔹 Recommended only for experienced traders.
+
+        Are you sure you want to enable this mode?
+    </onlyExpTraders>
+
+
+    <onlyExpTradersNext>
+        - Position limit is ignored.
+        - Bot attempts to open a position for every signal.
+
+        > ❗ Important: this option does not bypass API key or exchange access checks.
+    </onlyExpTradersNext>
+
+
+    <getPlecho><![CDATA[ Step 3: ⚙️ Specify desired <b>leverage</b> (e.g., 20): ]]></getPlecho>
+    <getPosOrPlech>
+        <![CDATA[
+        💰 Choose position size calculation method:
+
+        1. Fixed amount (in USDT)
+        2. Risk percentage of deposit <a href="https://telegra.ph/Kak-rasschityvaetsya-razmer-pozicii-08-16">learn more about the rules</a> Choose: "amount" or "percentage" ]]>
+
+        %2s
+    </getPosOrPlech>
+
+
+    <selectSumOrProc>Select the percentage of your deposit or fixed amount</selectSumOrProc>
+    <getOnlySum>Enter fixed amount in USDT (minimum 10 USDT)</getOnlySum>
+    <sum>Amount</sum>
+    <proc>Percentage</proc>
+    <getSum>Enter fixed amount in USDT (minimum 10 USDT): - amount</getSum>
+    <getProc>Enter the percentage of your deposit you're willing to risk per position (e.g., 1): - percentage</getProc>
+
+
+    <regDone>
+        🎉 Registration complete! You are successfully connected to the bot.
+
+        📌 You will now receive signals and open positions automatically.
+        To view commands, type: /help
+    </regDone>
+
+
+    <nonNumber>❌ Error: You entered non-numeric value, please try again.</nonNumber>
+    <regFailed>🔔 You have not completed profile setup. Please provide the missing information.</regFailed>
+    <minSum>Value too low, please enter a higher amount.</minSum>
+    <profile>
+        ⚙️ My Profile:
+        Name: %2s
+        UID: %2s
+        Number of positions: %2s
+        Leverage: %2sx
+        Position size: %2s
+        Exchange: %2s
+
+        Language: English
+
+        Expiration date: %2s
+    </profile>
+
+
+    <reply>
+        <profileButton>Profile</profileButton>
+        <positionsButton>Positions</positionsButton>
+        <historyButton>Trade History</historyButton>
+        <referralButton>My Referral Code</referralButton>
+    </reply>
+
+    <positions>
+        <opens>Open Positions</opens>
+        <closes>Closed Trades</closes>
+    </positions>
+
+    <getOrdersInMessage>Show in message</getOrdersInMessage>
+    <setProfile name="⚙️ Edit Profile" what="🔔 Choose what you want to change in your profile:">
+        <setNameButton>🔹Name</setNameButton>
+        <getNewName>🔧 Enter new name:</getNewName>
+        <setPosButton>📊 Number of positions</setPosButton>
+        <getNewPos>🔧 Enter new number of positions:</getNewPos>
+        <setPlechoButton>💪 Leverage</setPlechoButton>
+        <getNewPlecho>🔧 Enter new leverage:</getNewPlecho>
+        <setLangButton>🇬🇧 Language</setLangButton>
+        <getNewLang>🔧 Select new interface language:</getNewLang>
+        <setBeerjButton>Exchange</setBeerjButton>
+        <getNewBeerj>🔧 Select exchange for trading:</getNewBeerj>
+        <setKeysButton>Keys</setKeysButton>
+        <setPosSizeButton>📏 Position size</setPosSizeButton>
+        <getNewExpr>🔧 Enter new access expiration date in format: yyyy.mm.dd Or press "unlimit" to grant unlimited
+            access.
+        </getNewExpr>
+        <changed>✅ Changes applied successfully</changed>
+        <cancel>❌ Cancel</cancel>
+    </setProfile>
+    <admmsg>Message from administration!</admmsg>
+</bot>

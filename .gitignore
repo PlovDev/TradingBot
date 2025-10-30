@@ -1,0 +1,30 @@
+     /target/
+     /out/
+
+     ### IntelliJ IDEA ###
+     .idea/
+     .mvn/
+     *.iws
+     *.iml
+     *.ipr
+     *.env
+     *.pub
+
+     ### My ###
+     *.xlsx
+     .gitignore
+     *.jar
+     *.db
+
+     ### Eclipse ###
+     .apt_generated
+     .classpath
+     .factorypath
+     .project
+     .settings
+     .springBeans
+     .sts4-cache
+     .env
+
+     ### Mac OS ###
+     .DS_Store
